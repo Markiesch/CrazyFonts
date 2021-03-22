@@ -1,4 +1,4 @@
-# FontChromeExtension
+# CrazyFonts Chrome Extension
 CrazyFonts is a simple Chrome extension that allows you to view various information of any font.
 
 # Setup
