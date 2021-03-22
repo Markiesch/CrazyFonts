@@ -1,0 +1,19 @@
+{
+    "name": "CrazyFonts",
+    "description": "Get the Font name of any element!",
+    "version": "1.0",
+    "manifest_version": 2,
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["content.js"],
+            "css": ["cursor.css"]
+        }
+    ],
+    "background": {
+        "scripts": ["background.js"]
+    },
+    "browser_action": {
+        "default_icon": "ape.png"
+    }
+}

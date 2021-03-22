@@ -1,0 +1,49 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
+.exitButton,
+.cursor {
+    font-family: "Poppins", Arial, sans-serif;
+    font-weight: 600;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    position: fixed;
+}
+
+.exitButton {
+    top: 0;
+    right: 0;
+    margin: 0.5em;
+    cursor: pointer;
+    padding: 0.4em 0.75em;
+    font-size: 13px;
+}
+
+.exitButton:hover {
+    background-color: rgba(0, 0, 0, 1);
+}
+
+.cursor {
+    pointer-events: none;
+    transform: translate(10px, 10px);
+    padding: 0.25em 0.75em;
+    font-size: 16px;
+}
+
+.infoCard {
+    font-family: "Poppins", Arial, sans-serif;
+    background-color: #343434;
+    color: white;
+    position: absolute;
+    font-weight: 500;
+    padding: 2em;
+    font-size: 14px;
+}
+.infoCard span {
+    color: #afa9a5;
+}
+
+.infoCard .color {
+    width: 10px;
+    height: 10px;
+    border: 2px solid black;
+}
