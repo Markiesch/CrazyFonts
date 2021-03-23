@@ -1,11 +1,17 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 
 .exitButton,
-.cursor {
+.cursor,
+.infoCard {
     font-family: "Poppins", Arial, sans-serif;
+    color: white;
+    z-index: 99999;
+}
+
+.exitButton,
+.cursor {
     font-weight: 600;
     background-color: rgba(0, 0, 0, 0.8);
-    color: white;
     position: fixed;
 }
 
@@ -30,9 +36,7 @@
 }
 
 .infoCard {
-    font-family: "Poppins", Arial, sans-serif;
     background-color: #343434;
-    color: white;
     position: absolute;
     font-weight: 500;
     padding: 2em;
