@@ -30,7 +30,7 @@ function gotMessage() {
         const card = document.createElement("p");
         card.classList.add("infoCard");
         document.body.appendChild(card);
-        card.innerHTML = `${firstFont} - ${target.fontWeight}<br /><br /><span>Family</span><br />${font}<br /><br /><span>Style</span><br />${target.fontStyle}<br /><br /><span>Weight</span><br />${target.fontWeight}<br /><br /><span>Size</span><br />${target.fontSize}<br /><br /><span>Line Height</span><br />${target.lineHeight}<br /><br /><span>Color</span><br />${target.color}<br /><br />`;
+        card.innerHTML = `${firstFont} - ${target.fontWeight}<br /><br /><span>Family</span><br />${font}<br /><br /><span>Style</span><br />${target.fontStyle}<br /><br /><span>Weight</span><br />${target.fontWeight}<br /><br /><span>Size</span><br />${target.fontSize}<br /><br /><span>Line Height</span><br />${target.lineHeight}<br /><br /><span>Color</span><br />${target.color}<span class="background-color" style="background-color:${target.color}"></span><br /><br />`;
         card.style.left = e.pageX + "px";
         card.style.top = e.pageY + "px";
     }
@@ -45,6 +45,7 @@ function gotMessage() {
     function closeMenu() {
         exitBtn.remove();
         exitBtn.removeEventListener("click", closeMenu);
+        document.removeEventListener("click", createInfoCart);
         cursor.remove();
         document.removeEventListener("mousemove", getFont);
         const cards = document.querySelectorAll(".infoCard");
