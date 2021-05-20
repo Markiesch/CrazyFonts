@@ -14,7 +14,9 @@ function gotMessage() {
 
     function getFont(e) {
         const font = window.getComputedStyle(e.target).fontFamily;
-        const firstFont = font.substring(0, font.indexOf(","));
+        let firstFont = font.substring(0, font.indexOf(","));
+        // When there is only one font the "," does not excist in the font family name, so we set the content to the whole font name (with fallbacks)
+        if (!firstFont) firstFont = font;
         cursor.style.left = e.clientX + "px";
         cursor.style.top = e.clientY + "px";
         cursor.innerText = firstFont;
@@ -39,7 +41,9 @@ function gotMessage() {
 
         const target = window.getComputedStyle(e.target);
         const font = target.fontFamily;
-        const firstFont = font.substring(0, font.indexOf(","));
+        let firstFont = font.substring(0, font.indexOf(","));
+        // When there is only one font the "," does not excist in the font family name, so we set the content to the whole font name (with fallbacks)
+        if (!firstFont) firstFont = font;
 
         const card = document.createElement("p");
         card.classList.add("infoCard");
