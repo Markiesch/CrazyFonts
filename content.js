@@ -5,6 +5,11 @@ function gotMessage() {
     cursor.classList.add("cursor");
     document.body.appendChild(cursor);
 
+    const exitBtn = document.createElement("p");
+    exitBtn.classList.add("exitButton");
+    exitBtn.innerText = "Exit EpicFont";
+    document.body.appendChild(exitBtn);
+
     document.addEventListener("mousemove", getFont);
 
     function getFont(e) {
@@ -15,7 +20,16 @@ function gotMessage() {
         cursor.innerText = firstFont;
     }
 
+    const links = document.querySelectorAll("a");
+
     document.addEventListener("click", createInfoCart);
+    for (const a of links) {
+        a.addEventListener("click", disableLinks);
+    }
+
+    function disableLinks(event) {
+        event.preventDefault();
+    }
 
     function createInfoCart(e) {
         console.log(e);
@@ -34,11 +48,6 @@ function gotMessage() {
         card.style.left = e.pageX + "px";
         card.style.top = e.pageY + "px";
     }
-
-    const exitBtn = document.createElement("p");
-    exitBtn.classList.add("exitButton");
-    exitBtn.innerText = "Exit EpicFont";
-    document.body.appendChild(exitBtn);
 
     exitBtn.addEventListener("click", closeMenu);
 
