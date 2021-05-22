@@ -24,7 +24,7 @@ function gotMessage() {
 
     const links = document.querySelectorAll("a");
 
-    document.addEventListener("click", createInfoCart);
+    document.body.addEventListener("click", createInfoCart);
     for (const a of links) {
         a.addEventListener("click", disableLinks);
     }
@@ -34,7 +34,6 @@ function gotMessage() {
     }
 
     function createInfoCart(e) {
-        console.log(e);
         if (e.target == exitBtn) {
             return;
         }
@@ -45,12 +44,36 @@ function gotMessage() {
         // When there is only one font the "," does not excist in the font family name, so we set the content to the whole font name (with fallbacks)
         if (!firstFont) firstFont = font;
 
-        const card = document.createElement("p");
+        const card = document.createElement("div");
         card.classList.add("infoCard");
-        document.body.appendChild(card);
-        card.innerHTML = `${firstFont} - ${target.fontWeight}<br /><br /><span>Family</span><br />${font}<br /><br /><span>Style</span><br />${target.fontStyle}<br /><br /><span>Weight</span><br />${target.fontWeight}<br /><br /><span>Size</span><br />${target.fontSize}<br /><br /><span>Line Height</span><br />${target.lineHeight}<br /><br /><span>Color</span><br />${target.color}<span class="background-color" style="background-color:${target.color}"></span><br /><br />`;
+        document.querySelector("html").appendChild(card);
+        card.innerHTML = `
+            <p>${firstFont} - ${target.fontWeight}</p>
+            <h4>Family</h4>
+            <p>${font}</p>
+            <h4>Style</h4>
+            <p>${target.fontStyle}</p>
+            <h4>Weight</h4>
+            <p>${target.fontWeight}</p>
+            <h4>Size</h4>
+            <p>${target.fontSize}</p>
+            <h4>Line Height</h4>
+            <p>${target.lineHeight}</p>
+            <h4>Color</h4>
+            <p>${target.color}<span class="background-color" style="background-color:${target.color}"></span></p>
+            <span class='crazyFontsCardExitBtn'>&times;</span>
+        `;
         card.style.left = e.pageX + "px";
         card.style.top = e.pageY + "px";
+
+        const cardExitBtn = card.querySelector(".crazyFontsCardExitBtn");
+
+        cardExitBtn.addEventListener("click", closeCrazyFontsMenu);
+
+        function closeCrazyFontsMenu(e) {
+            const element = e.target.parentElement;
+            element.remove();
+        }
     }
 
     exitBtn.addEventListener("click", closeMenu);
