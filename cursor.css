@@ -1,7 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 
+.crazyFontsActive * {
+    cursor: default !important;
+    pointer-events: none !important;
+}
+
 .exitButton,
-.cursor,
+.crazyFontsCursor,
 .infoCard {
     font-family: "Poppins", Arial, sans-serif;
     /* color: white; */
@@ -9,7 +14,7 @@
 }
 
 .exitButton,
-.cursor {
+.crazyFontsCursor {
     font-weight: 600;
     position: fixed;
     z-index: 999999999;
@@ -29,17 +34,18 @@
     opacity: 1;
 }
 
-.cursor,
+.crazyFontsCursor,
 .infoCard,
 .exitButton {
-    background-color: rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(2rem);
-    box-shadow: 0 0 10px rgba(46, 54, 68, 0.09);
+    /* background-color: rgba(0, 0, 0, 0.1); */
+    background: linear-gradient(to right bottom, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.075));
+    backdrop-filter: blur(30px);
+    box-shadow: 0 0 10px rgba(46, 54, 68, 0.05);
     background-clip: padding-box;
-    border-radius: 1rem;
+    border-radius: 15px;
 }
 
-.cursor {
+.crazyFontsCursor {
     pointer-events: none;
     transform: translate(10px, 10px);
     padding: 0.25em 0.75em;
@@ -49,7 +55,7 @@
 .infoCard {
     position: absolute;
     max-width: 350px;
-    padding: 2em;
+    padding: 30px;
 }
 
 .infoCard h4 {
@@ -63,9 +69,9 @@
 }
 
 .infoCard p {
-    /* color: #333; */
-    /* color: rgb(0, 0, 0); */
     mix-blend-mode: difference;
+    font-size: 15px;
+    margin: 0 0 10px 0;
 }
 
 .infoCard .color {

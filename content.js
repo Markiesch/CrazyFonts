@@ -1,52 +1,63 @@
 chrome.runtime.onMessage.addListener(gotMessage);
 
 function gotMessage() {
+    const createdCards = [];
+
+    const htmlEl = document.querySelector("html");
+    document.body.classList.add("crazyFontsActive");
+
     const cursor = document.createElement("p");
-    cursor.classList.add("cursor");
-    document.body.appendChild(cursor);
+    cursor.classList.add("crazyFontsCursor");
+    htmlEl.appendChild(cursor);
 
-    const exitBtn = document.createElement("p");
-    exitBtn.classList.add("exitButton");
-    exitBtn.innerText = "Exit EpicFont";
-    document.body.appendChild(exitBtn);
+    document.addEventListener("mousemove", updateCursor);
 
-    document.addEventListener("mousemove", getFont);
+    function updateCursor(e) {
+        cursor.style.left = e.clientX + "px";
+        cursor.style.top = e.clientY + "px";
+        cursor.innerText = getFont(e);
+    }
 
     function getFont(e) {
         const font = window.getComputedStyle(e.target).fontFamily;
         let firstFont = font.substring(0, font.indexOf(","));
         // When there is only one font the "," does not excist in the font family name, so we set the content to the whole font name (with fallbacks)
         if (!firstFont) firstFont = font;
-        cursor.style.left = e.clientX + "px";
-        cursor.style.top = e.clientY + "px";
-        cursor.innerText = firstFont;
+        return firstFont;
     }
 
     const links = document.querySelectorAll("a");
 
-    document.body.addEventListener("click", createInfoCart);
-    for (const a of links) {
-        a.addEventListener("click", disableLinks);
+    document.body.addEventListener("click", createInfoCard);
+    for (const link of links) {
+        link.addEventListener("click", disableLinks);
     }
 
-    function disableLinks(event) {
-        event.preventDefault();
+    function disableLinks(e) {
+        e.preventDefault();
     }
 
-    function createInfoCart(e) {
-        if (e.target == exitBtn) {
-            return;
+    function createInfoCard(e) {
+        if (e.target == exitBtn) return;
+
+        if (createdCards.length >= 3) {
+            createdCards[0].remove();
+            createdCards.shift();
         }
 
         const target = window.getComputedStyle(e.target);
         const font = target.fontFamily;
         let firstFont = font.substring(0, font.indexOf(","));
-        // When there is only one font the "," does not excist in the font family name, so we set the content to the whole font name (with fallbacks)
+        // When there is only one font the "," does not excist in the font family name,
+        // so we set the content to the whole font name (with fallbacks)
         if (!firstFont) firstFont = font;
 
         const card = document.createElement("div");
+        createdCards.push(card);
         card.classList.add("infoCard");
-        document.querySelector("html").appendChild(card);
+        htmlEl.appendChild(card);
+        card.style.left = e.pageX + "px";
+        card.style.top = e.pageY + "px";
         card.innerHTML = `
             <p>${firstFont} - ${target.fontWeight}</p>
             <h4>Family</h4>
@@ -63,11 +74,8 @@ function gotMessage() {
             <p>${target.color}<span class="background-color" style="background-color:${target.color}"></span></p>
             <span class='crazyFontsCardExitBtn'>&times;</span>
         `;
-        card.style.left = e.pageX + "px";
-        card.style.top = e.pageY + "px";
 
         const cardExitBtn = card.querySelector(".crazyFontsCardExitBtn");
-
         cardExitBtn.addEventListener("click", closeCrazyFontsMenu);
 
         function closeCrazyFontsMenu(e) {
@@ -76,18 +84,29 @@ function gotMessage() {
         }
     }
 
+    document.addEventListener("keydown", exitCrazyFontsByKey);
+    function exitCrazyFontsByKey(e) {
+        if (e.key == "Escape") closeMenu();
+    }
+
+    const exitBtn = document.createElement("p");
+    exitBtn.classList.add("exitButton");
+    exitBtn.innerText = "Exit CrazyFonts";
+    htmlEl.appendChild(exitBtn);
     exitBtn.addEventListener("click", closeMenu);
 
     function closeMenu() {
-        exitBtn.remove();
+        // Remove all Eventlisteners created by CrazyFonts
         exitBtn.removeEventListener("click", closeMenu);
-        document.removeEventListener("click", createInfoCart);
-        cursor.remove();
-        document.removeEventListener("mousemove", getFont);
-        const cards = document.querySelectorAll(".infoCard");
+        document.removeEventListener("mousemove", updateCursor);
+        document.body.removeEventListener("click", createInfoCard);
+        document.removeEventListener("keydown", exitCrazyFontsByKey);
+        document.body.classList.remove("crazyFontsActive");
 
-        for (const card of cards) {
-            card.remove();
-        }
+        // Remove ELements created by CrazyFonts
+        cursor.remove();
+        exitBtn.remove();
+        const cards = document.querySelectorAll(".infoCard");
+        for (const card of cards) card.remove();
     }
 }
