@@ -55,13 +55,43 @@
 .infoCard {
     position: absolute;
     max-width: 350px;
-    padding: 30px;
+}
+
+.infoCard::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(100%, -100%);
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 10px rgba(46, 54, 68, 0.05);
+    backdrop-filter: blur(30px);
+}
+
+.infoCard div {
+    padding: 30px 30px 0 30px;
+}
+
+.infoCard div + div {
+    padding: 0 30px;
+    max-height: 0;
+    overflow: hidden;
+    animation: slide-in 600ms ease forwards;
+}
+
+@keyframes slide-in {
+    to {
+        /* Some bigger value the card will ever get */
+        max-height: 500px;
+        padding: 0 30px 30px 30px;
+    }
 }
 
 .infoCard h4 {
-    /* color: #afa9a5; */
-    /* color: #505050; */
-    /* color: rgb(255, 255, 255); */
     /* mix-blend-mode: difference; */
     color: gray;
     font-weight: 500;

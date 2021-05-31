@@ -59,7 +59,10 @@ function gotMessage() {
         card.style.left = e.pageX + "px";
         card.style.top = e.pageY + "px";
         card.innerHTML = `
+        <div>
             <p>${firstFont} - ${target.fontWeight}</p>
+        </div>
+        <div>
             <h4>Family</h4>
             <p>${font}</p>
             <h4>Style</h4>
@@ -73,6 +76,7 @@ function gotMessage() {
             <h4>Color</h4>
             <p>${target.color}<span class="background-color" style="background-color:${target.color}"></span></p>
             <span class='crazyFontsCardExitBtn'>&times;</span>
+        </div>
         `;
 
         const cardExitBtn = card.querySelector(".crazyFontsCardExitBtn");
