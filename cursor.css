@@ -1,5 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 
+.crazyFontsActive {
+  z-index: 1;
+  position: relative;
+}
+
 .crazyFontsActive * {
   cursor: crosshair !important;
 }
@@ -14,7 +19,7 @@
 .crazyFontsCursor {
   font-weight: 600;
   position: fixed;
-  z-index: 999;
+  z-index: 2;
 }
 
 .exitButton {
@@ -53,7 +58,7 @@
   position: absolute;
   width: 450px;
   overflow: hidden;
-  z-index: 998;
+  z-index: 3;
 }
 
 .infoCard p {
