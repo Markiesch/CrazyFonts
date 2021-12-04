@@ -1,116 +1,139 @@
 chrome.runtime.onMessage.addListener(gotMessage);
 
 function gotMessage() {
-    const createdCards = [];
+  const htmlEl = document.querySelector("html");
 
-    const htmlEl = document.querySelector("html");
-    document.body.classList.add("crazyFontsActive");
+  addEventListener("mousemove", updateCursor);
+  document.body.addEventListener("click", createInfoCard);
 
-    const cursor = document.createElement("p");
-    cursor.classList.add("crazyFontsCursor");
-    htmlEl.appendChild(cursor);
+  document.body.classList.add("crazyFontsActive");
 
-    document.addEventListener("mousemove", updateCursor);
+  const cursor = document.createElement("p");
+  cursor.classList.add("crazyFontsCursor");
+  htmlEl.appendChild(cursor);
 
-    function updateCursor(e) {
-        cursor.style.left = e.clientX + "px";
-        cursor.style.top = e.clientY + "px";
-        cursor.innerText = getFont(e);
-    }
+  const exitBtn = document.createElement("p");
+  exitBtn.classList.add("exitButton");
+  exitBtn.innerText = "Exit CrazyFonts";
+  htmlEl.appendChild(exitBtn);
+  exitBtn.addEventListener("click", closeMenu);
 
-    function getFont(e) {
-        const font = window.getComputedStyle(e.target).fontFamily;
-        let firstFont = font.substring(0, font.indexOf(","));
-        // When there is only one font the "," does not excist in the font family name, so we set the content to the whole font name (with fallbacks)
-        if (!firstFont) firstFont = font;
-        return firstFont;
-    }
+  const links = document.querySelectorAll("a");
+  for (const link of links) link.addEventListener("click", disableLink);
+  function disableLink(event) {
+    event.preventDefault();
+  }
 
-    const links = document.querySelectorAll("a");
+  function updateCursor(event) {
+    cursor.style.left = event.clientX + "px";
+    cursor.style.top = event.clientY + "px";
+    cursor.innerText = getFirstFont(event.target);
+  }
 
-    document.body.addEventListener("click", createInfoCard);
-    for (const link of links) {
-        link.addEventListener("click", disableLinks);
-    }
+  function getFont(target) {
+    return window.getComputedStyle(target).fontFamily;
+  }
 
-    function disableLinks(e) {
-        e.preventDefault();
-    }
+  function getFirstFont(target) {
+    const font = window.getComputedStyle(target).fontFamily;
+    const firstFont = font.substring(0, font.indexOf(","));
+    return firstFont || font;
+  }
 
-    function createInfoCard(e) {
-        if (e.target == exitBtn) return;
+  function createInfoCard(event) {
+    const target = window.getComputedStyle(event.target);
 
-        if (createdCards.length >= 3) {
-            createdCards[0].remove();
-            createdCards.shift();
-        }
+    const infoCard = document.createElement("div");
+    htmlEl.appendChild(infoCard);
+    infoCard.classList.add("infoCard");
+    infoCard.style.left = event.pageX + "px";
+    infoCard.style.top = event.pageY + "px";
 
-        const target = window.getComputedStyle(e.target);
-        const font = target.fontFamily;
-        let firstFont = font.substring(0, font.indexOf(","));
-        // When there is only one font the "," does not excist in the font family name,
-        // so we set the content to the whole font name (with fallbacks)
-        if (!firstFont) firstFont = font;
-
-        const card = document.createElement("div");
-        createdCards.push(card);
-        card.classList.add("infoCard");
-        htmlEl.appendChild(card);
-        card.style.left = e.pageX + "px";
-        card.style.top = e.pageY + "px";
-        card.innerHTML = `
+    infoCard.innerHTML += `
+    <div class="crazyFontsHeader">
+      <p class="crazyFontsFFirstFont">${getFirstFont(event.target)} - ${target.fontWeight}</p>
+      <span class="crazyFontsCardExitBtn">&times;</span>
+    </div>
+    <div class="crazyFontsInformation">
+      <div>
         <div>
-            <p>${firstFont} - ${target.fontWeight}</p>
+          <h4>Family</h4>
+          <p class="crazyFontsFFont">${getFont(event.target)}</p>
+        </div>
+      </div>
+      <div>
+        <div>
+          <h4>Style</h4>
+          <p class="crazyFontsFStyle">${target.fontStyle}</p>
         </div>
         <div>
-            <h4>Family</h4>
-            <p>${font}</p>
-            <h4>Style</h4>
-            <p>${target.fontStyle}</p>
-            <h4>Weight</h4>
-            <p>${target.fontWeight}</p>
-            <h4>Size</h4>
-            <p>${target.fontSize}</p>
-            <h4>Line Height</h4>
-            <p>${target.lineHeight}</p>
-            <h4>Color</h4>
-            <p>${target.color}<span class="background-color" style="background-color:${target.color}"></span></p>
-            <span class='crazyFontsCardExitBtn'>&times;</span>
+          <h4>Weight</h4>
+          <p class="crazyFontsFWeight">${target.fontWeight}</p>
         </div>
-        `;
+        <div></div>
+      </div>
+    
+      <div>
+        <div>
+          <h4>Size</h4>
+          <p class="crazyFontsFSize">${target.fontSize}</p>
+        </div>
+        <div>
+          <h4>Line Height</h4>
+          <p class="crazyFontsFHeight">${target.lineHeight}</p>
+        </div>
+    
+        <div>
+          <h4>Color</h4>
+          <p class="crazyFontsFColor">${target.color}<span class="background-color" style="background-color:${target.color}"></span></p>
+        </div>
+      </div>
+      <div class="message"></div>
+    </div>`;
 
-        const cardExitBtn = card.querySelector(".crazyFontsCardExitBtn");
-        cardExitBtn.addEventListener("click", closeCrazyFontsMenu);
+    infoCard.querySelector(".crazyFontsCardExitBtn").addEventListener("click", closeCrazyFontsMenu);
 
-        function closeCrazyFontsMenu(e) {
-            const element = e.target.parentElement;
-            element.remove();
-        }
+    const message = infoCard.querySelector(".message");
+
+    infoCard.querySelector(".crazyFontsFFirstFont").addEventListener("click", () => copyText(getFirstFont(event.target), message));
+    infoCard.querySelector(".crazyFontsFFont").addEventListener("click", () => copyText(getFont(event.target), message));
+    infoCard.querySelector(".crazyFontsFStyle").addEventListener("click", () => copyText(target.fontStyle, message));
+    infoCard.querySelector(".crazyFontsFWeight").addEventListener("click", () => copyText(target.fontWeight, message));
+    infoCard.querySelector(".crazyFontsFSize").addEventListener("click", () => copyText(target.fontSize, message));
+    infoCard.querySelector(".crazyFontsFHeight").addEventListener("click", () => copyText(target.lineHeight, message));
+    infoCard.querySelector(".crazyFontsFColor").addEventListener("click", () => copyText(target.color, message));
+  }
+
+  function copyText(text, message) {
+    try {
+      navigator.clipboard.writeText(text);
+      message.innerHTML = "Succesfully copied!";
+    } catch {
+      console.warn("CrazyFonts > Failed to copy to clipboard, using propt instead...");
+      window.prompt("Copy to clipboard: Ctrl + C, Enter", text);
     }
+  }
 
-    document.addEventListener("keydown", exitCrazyFontsByKey);
-    function exitCrazyFontsByKey(e) {
-        if (e.key == "Escape") closeMenu();
-    }
+  document.addEventListener("keydown", exitCrazyFontsByKey);
+  function exitCrazyFontsByKey(event) {
+    if (event.key == "Escape") closeMenu();
+  }
 
-    const exitBtn = document.createElement("p");
-    exitBtn.classList.add("exitButton");
-    exitBtn.innerText = "Exit CrazyFonts";
-    htmlEl.appendChild(exitBtn);
-    exitBtn.addEventListener("click", closeMenu);
+  function closeCrazyFontsMenu(event) {
+    const element = event.target.parentElement.parentElement;
+    element.remove();
+  }
 
-    function closeMenu() {
-        // Remove all Eventlisteners created by CrazyFonts
-        exitBtn.removeEventListener("click", closeMenu);
-        document.removeEventListener("mousemove", updateCursor);
-        document.body.removeEventListener("click", createInfoCard);
-        document.removeEventListener("keydown", exitCrazyFontsByKey);
-        document.body.classList.remove("crazyFontsActive");
+  function closeMenu() {
+    exitBtn.removeEventListener("click", closeMenu);
+    document.removeEventListener("mousemove", updateCursor);
+    document.body.removeEventListener("click", createInfoCard);
+    document.removeEventListener("keydown", exitCrazyFontsByKey);
+    document.body.classList.remove("crazyFontsActive");
 
-        // Remove ELements created by CrazyFonts
-        cursor.remove();
-        exitBtn.remove();
-        const cards = document.querySelectorAll(".infoCard");
-        for (const card of cards) card.remove();
-    }
+    cursor.remove();
+    exitBtn.remove();
+    const cards = document.querySelectorAll(".infoCard");
+    for (const card of cards) card.remove();
+  }
 }
